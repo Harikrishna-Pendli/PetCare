@@ -22,7 +22,7 @@ fun SignupScreen(
     var name by remember { mutableStateOf("") }
 
 
-    val authState by viewModel.authState.collectAsState()
+    val authState by viewModel.signUpState.collectAsState()
 
     LaunchedEffect(authState) {
         if (authState is UiState.Success) {

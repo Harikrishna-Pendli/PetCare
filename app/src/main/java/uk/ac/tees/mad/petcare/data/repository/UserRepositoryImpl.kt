@@ -2,7 +2,7 @@ package uk.ac.tees.mad.petcare.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import uk.ac.tees.mad.petcare.data.datasource.UserDataSource
+import uk.ac.tees.mad.petcare.data.datasource.remote.UserDataSource
 import uk.ac.tees.mad.petcare.domain.model.User
 import uk.ac.tees.mad.petcare.domain.repository.UserRepository
 import javax.inject.Inject

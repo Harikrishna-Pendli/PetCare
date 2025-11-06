@@ -1,4 +1,4 @@
-package uk.ac.tees.mad.petcare.data.datasource
+package uk.ac.tees.mad.petcare.data.datasource.remote
 
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth

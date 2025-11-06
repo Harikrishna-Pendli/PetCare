@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "uk.ac.tees.mad.petcare"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "uk.ac.tees.mad.petcare"
@@ -83,4 +83,11 @@ dependencies {
     //coil
     implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation ("io.coil-kt:coil-svg:2.4.0")
+
+    //Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+
+    implementation("androidx.work:work-runtime-ktx:2.10.5")
 }
