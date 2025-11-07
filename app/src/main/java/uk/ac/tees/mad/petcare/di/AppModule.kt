@@ -1,5 +1,6 @@
 package uk.ac.tees.mad.petcare.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.google.firebase.auth.FirebaseAuth
@@ -54,4 +55,6 @@ object AppModule {
         dao: PetDao,
         firebaseService: PetDataSource
     ): PetRepository = PetRepositoryImpl(dao, firebaseService)
+
+
 }

@@ -14,52 +14,60 @@ class PetRepositoryImpl(
 ) : PetRepository {
 
     override suspend fun insertPet(pet: Pet) {
-        val firebaseId = firebaseService.addPet(pet)
         dao.insertPet(
             PetEntity(
-                firebaseId = firebaseId,
                 name = pet.name,
                 species = pet.species,
                 age = pet.age,
                 vaccinationInfo = pet.vaccinationInfo,
-                foodPreferences = pet.foodPreferences
+                foodPreferences = pet.foodPreferences,
+                synced = false
             )
         )
     }
 
     override suspend fun updatePet(firebaseId: String?, pet: Pet) {
-        firebaseId?.let { firebaseService.updatePet(it, pet) }
-        dao.insertPet(
-            PetEntity(
-                firebaseId = firebaseId,
-                name = pet.name,
-                species = pet.species,
-                age = pet.age,
-                vaccinationInfo = pet.vaccinationInfo,
-                foodPreferences = pet.foodPreferences
-            )
+        val existing = firebaseId?.let { dao.getPetByFirebaseId(it) }
+        val localEntity = existing?.copy(
+            name = pet.name,
+            species = pet.species,
+            age = pet.age,
+            vaccinationInfo = pet.vaccinationInfo,
+            foodPreferences = pet.foodPreferences,
+            synced = false
+        ) ?: PetEntity(
+            firebaseId = firebaseId,
+            name = pet.name,
+            species = pet.species,
+            age = pet.age,
+            vaccinationInfo = pet.vaccinationInfo,
+            foodPreferences = pet.foodPreferences,
+            synced = false
         )
+        dao.insertPet(localEntity)
     }
 
     override suspend fun deletePet(firebaseId: String?) {
-        firebaseId?.let { firebaseService.deletePet(it) }
-        firebaseId?.let {
-            val allPets = dao.getAllPets()
-            // Normally you'd delete using @Query, simplified for brevity
+        if (firebaseId != null) {
+            val pet = dao.getPetByFirebaseId(firebaseId)
+            pet?.let {
+                dao.insertPet(it.copy(markedForDeletion = true, synced = false))
+            }
         }
     }
 
     override fun getAllPets(): Flow<List<Pet>> {
         return dao.getAllPets().map { list ->
-            list.map {
+            list.filter { !it.markedForDeletion }.map {
                 Pet(
                     name = it.name,
                     species = it.species,
                     age = it.age,
-                    vaccinationInfo = it.vaccinationInfo,
-                    foodPreferences = it.foodPreferences
+                    vaccinationInfo = it.vaccinationInfo.toString(),
+                    foodPreferences = it.foodPreferences.toString()
                 )
             }
         }
     }
 }
+
