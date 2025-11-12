@@ -20,8 +20,6 @@ fun SignupScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
-
-
     val authState by viewModel.signUpState.collectAsState()
 
     LaunchedEffect(authState) {

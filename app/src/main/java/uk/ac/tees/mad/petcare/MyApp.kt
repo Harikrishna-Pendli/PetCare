@@ -14,7 +14,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltAndroidApp
-class MyApp : Application(), Configuration.Provider {
+class MyApp : Application()
+    , Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
