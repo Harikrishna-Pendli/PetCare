@@ -7,8 +7,9 @@ import uk.ac.tees.mad.petcare.data.local.PetDao
 import uk.ac.tees.mad.petcare.data.model.PetEntity
 import uk.ac.tees.mad.petcare.domain.model.Pet
 import uk.ac.tees.mad.petcare.domain.repository.PetRepository
+import javax.inject.Inject
 
-class PetRepositoryImpl(
+class PetRepositoryImpl @Inject constructor(
     private val dao: PetDao,
     private val firebaseService: PetDataSource
 ) : PetRepository {

@@ -1,6 +1,7 @@
 package uk.ac.tees.mad.petcare.di
 
 import android.app.Application
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +16,13 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(app: Application): AppDatabase =
-        PetDatabase.getDatabase(app)
+    fun provideDatabase(app: Application): PetDatabase =
+        Room.databaseBuilder(
+            app,
+            PetDatabase::class.java,
+            "pet_database"
+        ).fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     fun providePetDao(db: PetDatabase): PetDao = db.petDao()

@@ -7,14 +7,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.education.name.presentation.ui.viewmodel.UserViewModel
+//import com.education.name.presentation.ui.viewmodel.UserViewModel
 import uk.ac.tees.mad.petcare.domain.model.User
+import uk.ac.tees.mad.petcare.presentation.viewmodel.AuthViewModel
 import uk.ac.tees.mad.petcare.util.UiState
 
 @Composable
 fun SignupScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    userViewModel: UserViewModel=hiltViewModel(),
+//    userViewModel: UserViewModel=hiltViewModel(),
     onSignupSuccess: () -> Unit = {} // navigate after successful signup
 ) {
     var email by remember { mutableStateOf("") }
@@ -25,7 +26,7 @@ fun SignupScreen(
     LaunchedEffect(authState) {
         if (authState is UiState.Success) {
             val user = User(name = name, email = email)
-            userViewModel.createUser(user) // Fire-and-forget
+//            userViewModel.createUser(user) // Fire-and-forget
             onSignupSuccess()
         }
     }

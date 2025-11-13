@@ -1,23 +1,33 @@
 package com.education.name.presentation.ui.screen.auth
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import uk.ac.tees.mad.petcare.presentation.viewmodel.AuthViewModel
 import uk.ac.tees.mad.petcare.util.UiState
 
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    onLoginSuccess: () -> Unit // navigate after successful login
+    onLoginSuccess: () -> Unit, // navigate after successful login
+    onNavigateToSignup: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     val authState by viewModel.signInState.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is UiState.Success) {
+            onLoginSuccess()
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
@@ -64,6 +74,25 @@ fun LoginScreen(
                             is UiState.Loading -> "Logging In..."
                             else -> "Login"
                         }
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        "Don't have an account? ",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyMedium
+
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        "Create Account",
+                        modifier = Modifier.clickable(onClick = onNavigateToSignup),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textDecoration = TextDecoration.Underline,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
 
