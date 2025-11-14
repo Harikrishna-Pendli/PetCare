@@ -20,21 +20,27 @@ class PetViewModel @Inject constructor(
 
     fun loadPets() {
         viewModelScope.launch {
-            petRepository.getAllPets().collect {
-                _pets.value = it
-            }
+//            petRepository.getAllPets().collect {
+//                _pets.value = it
+//            }
         }
     }
 
     fun addPet(pet: Pet) {
-        viewModelScope.launch { petRepository.insertPet(pet) }
+        viewModelScope.launch {
+//            petRepository.insertPet(pet)
+        }
     }
 
     fun updatePet(id: String?, pet: Pet) {
-        viewModelScope.launch { petRepository.updatePet(id, pet) }
+        viewModelScope.launch {
+//            petRepository.updatePet(id, pet)
+        }
     }
 
     fun deletePet(id: String?) {
-        viewModelScope.launch { petRepository.deletePet(id) }
+        viewModelScope.launch {
+//            petRepository.deletePet(id)
+        }
     }
 }

@@ -7,6 +7,7 @@ import uk.ac.tees.mad.petcare.data.local.PetDao
 import uk.ac.tees.mad.petcare.data.model.PetEntity
 import uk.ac.tees.mad.petcare.domain.model.Pet
 import uk.ac.tees.mad.petcare.domain.repository.PetRepository
+import java.util.UUID
 import javax.inject.Inject
 
 class PetRepositoryImpl @Inject constructor(
@@ -22,7 +23,8 @@ class PetRepositoryImpl @Inject constructor(
                 age = pet.age,
                 vaccinationInfo = pet.vaccinationInfo,
                 foodPreferences = pet.foodPreferences,
-                synced = false
+                synced = false,
+                localId = UUID.randomUUID().toString(),
             )
         )
     }
@@ -30,6 +32,7 @@ class PetRepositoryImpl @Inject constructor(
     override suspend fun updatePet(firebaseId: String?, pet: Pet) {
         val existing = firebaseId?.let { dao.getPetByFirebaseId(it) }
         val localEntity = existing?.copy(
+            localId = UUID.randomUUID().toString(),
             name = pet.name,
             species = pet.species,
             age = pet.age,
@@ -37,6 +40,7 @@ class PetRepositoryImpl @Inject constructor(
             foodPreferences = pet.foodPreferences,
             synced = false
         ) ?: PetEntity(
+            localId = UUID.randomUUID().toString(),
             firebaseId = firebaseId,
             name = pet.name,
             species = pet.species,

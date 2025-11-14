@@ -7,7 +7,7 @@ import java.util.UUID
 @Entity(tableName = "pets")
 data class PetEntity(
     @PrimaryKey
-    val localId: String = UUID.randomUUID().toString(),
+    val localId: String,
     val firebaseId: String? = null,
     val name: String,
     val species: String,
