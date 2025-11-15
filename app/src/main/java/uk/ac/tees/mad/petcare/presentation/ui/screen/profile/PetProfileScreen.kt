@@ -16,11 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.domain.model.Pet
+import uk.ac.tees.mad.petcare.presentation.ui.components.AddPetDialog
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetCard
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
 
@@ -31,6 +35,7 @@ fun PetProfileScreen(
     onEditPetClick: (Pet) -> Unit = {}
 ) {
     val pets by viewModel.pets.collectAsState()
+    var showAddDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(true) {
         viewModel.loadPets()
@@ -38,7 +43,7 @@ fun PetProfileScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddPetClick) {
+            FloatingActionButton(onClick = { showAddDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = "Add Pet")
             }
         }
@@ -67,5 +72,13 @@ fun PetProfileScreen(
                 }
             }
         }
+    }
+    if(showAddDialog) {
+        AddPetDialog(
+            onDismiss = { showAddDialog = false },
+            onSave = { pet ->
+                viewModel.addPet(pet)
+            }
+        )
     }
 }
