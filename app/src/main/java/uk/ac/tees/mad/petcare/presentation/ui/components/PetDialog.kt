@@ -9,6 +9,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,7 +19,9 @@ import androidx.compose.ui.unit.dp
 import uk.ac.tees.mad.petcare.domain.model.Pet
 
 @Composable
-fun AddPetDialog(
+fun PetDialog(
+    title: String,
+    initialPet: Pet? = null,
     onDismiss: () -> Unit,
     onSave: (Pet) -> Unit
 ) {
@@ -28,30 +31,42 @@ fun AddPetDialog(
     var vaccination by remember { mutableStateOf("") }
     var food by remember { mutableStateOf("") }
 
+    LaunchedEffect(initialPet) {
+        initialPet?.let {
+            name = it.name
+            species = it.species
+            age = it.age.toString()
+            vaccination = it.vaccinationInfo
+            food = it.foodPreferences
+        }
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             Button(
                 onClick = {
-                    if (name.isNotBlank()) {
+//                    if (name.isNotBlank()) {
                         onSave(
                             Pet(
-                                name = name,
-                                species = species,
+                                localId = initialPet?.localId ?: 0,
+                                firebaseId = initialPet?.firebaseId,
+                                name = name.trim(),
+                                species = species.trim(),
                                 age = age.toIntOrNull() ?: 0,
-                                vaccinationInfo = vaccination,
-                                foodPreferences = food
+                                vaccinationInfo = vaccination.trim(),
+                                foodPreferences = food.trim()
                             )
                         )
                         onDismiss()
-                    }
+//                    }
                 }
             ) { Text("Save") }
         },
         dismissButton = {
             OutlinedButton(onClick = onDismiss) { Text("Cancel") }
         },
-        title = { Text("Add New Pet") },
+        title = { Text(title) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
 

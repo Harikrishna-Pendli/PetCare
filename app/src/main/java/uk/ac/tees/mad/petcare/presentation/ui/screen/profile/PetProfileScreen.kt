@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -24,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.domain.model.Pet
-import uk.ac.tees.mad.petcare.presentation.ui.components.AddPetDialog
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetCard
+import uk.ac.tees.mad.petcare.presentation.ui.components.PetDialog
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
 
 @Composable
@@ -36,6 +35,7 @@ fun PetProfileScreen(
 ) {
     val pets by viewModel.pets.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    var petToEdit by remember { mutableStateOf<Pet?>(null) }
 
     LaunchedEffect(true) {
         viewModel.loadPets()
@@ -67,17 +67,32 @@ fun PetProfileScreen(
                 items(pets) { pet ->
                     PetCard(
                         pet = pet,
-                        onClick = { onEditPetClick(pet) }
+                        onClick = { petToEdit = pet }
                     )
                 }
             }
         }
     }
-    if(showAddDialog) {
-        AddPetDialog(
+    if (showAddDialog) {
+        PetDialog(
+            title = "Add Pet",
             onDismiss = { showAddDialog = false },
             onSave = { pet ->
                 viewModel.addPet(pet)
+            }
+        )
+    }
+    if (petToEdit != null) {
+        PetDialog(
+            title = "Edit Pet",
+            initialPet = petToEdit,
+            onDismiss = { petToEdit = null },
+            onSave = { updated ->
+                viewModel.updatePet(
+                    id = petToEdit?.localId,
+                    pet = updated
+                )
+                petToEdit = null
             }
         )
     }

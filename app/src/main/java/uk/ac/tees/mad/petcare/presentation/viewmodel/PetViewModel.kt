@@ -16,31 +16,36 @@ class PetViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _pets = MutableStateFlow<List<Pet>>(emptyList())
-    val pets: StateFlow<List<Pet>> = _pets
+    val pets: StateFlow<List<Pet>> get() = _pets
+
+
+    init {
+        loadPets()
+    }
 
     fun loadPets() {
         viewModelScope.launch {
-//            petRepository.getAllPets().collect {
-//                _pets.value = it
-//            }
+            petRepository.getAllPets().collect {
+                _pets.value = it
+            }
         }
     }
 
     fun addPet(pet: Pet) {
         viewModelScope.launch {
-//            petRepository.insertPet(pet)
+            petRepository.insertPet(pet)
         }
     }
 
-    fun updatePet(id: String?, pet: Pet) {
+    fun updatePet(id: Int?, pet: Pet) {
         viewModelScope.launch {
-//            petRepository.updatePet(id, pet)
+            petRepository.updatePet(id, pet)
         }
     }
 
-    fun deletePet(id: String?) {
+    fun deletePet(id: Int?) {
         viewModelScope.launch {
-//            petRepository.deletePet(id)
+            petRepository.deletePet(id)
         }
     }
 }

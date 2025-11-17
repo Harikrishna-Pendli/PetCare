@@ -1,35 +1,50 @@
 package uk.ac.tees.mad.petcare.data.datasource.remote
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import uk.ac.tees.mad.petcare.domain.model.Pet
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PetDataSource(firebaseFirestore: FirebaseFirestore) {
+@Singleton
+class PetDataSource @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val realtime: FirebaseDatabase
+) {
 
-    private val db = firebaseFirestore.collection("pets")
+    private fun userPetsRef() =
+        realtime.getReference("users/${auth.currentUser?.uid}/pets")
 
     // Add a new pet and return the Firestore document ID
     suspend fun addPet(pet: Pet): String {
-        val docRef = db.add(pet).await()
-        return docRef.id
+        val key = userPetsRef().push().key ?: throw Exception("Key error")
+        userPetsRef().child(key).setValue(pet.copy(firebaseId = key)).await()
+        return key
     }
 
     // Update an existing pet by Firestore document ID
     suspend fun updatePet(petId: String, pet: Pet) {
-        db.document(petId).set(pet).await()
+        userPetsRef().child(petId).setValue(pet).await()
     }
 
     // Delete a pet by document ID
     suspend fun deletePet(petId: String) {
-        db.document(petId).delete().await()
+        userPetsRef().child(petId).removeValue().await()
     }
 
     // Fetch all pets
     suspend fun getAllPets(): List<Pair<String, Pet>> {
-        val snapshot = db.get().await()
-        return snapshot.documents.mapNotNull { doc ->
-            val pet = doc.toObject(Pet::class.java)
-            if (pet != null) doc.id to pet else null
+        val snapshot = userPetsRef().get().await()
+        val list = mutableListOf<Pair<String, Pet>>()
+
+        for (child in snapshot.children) {
+            val pet = child.getValue(Pet::class.java)
+            if (pet != null) {
+                list.add(child.key!! to pet)
+            }
         }
+        return list
     }
 }

@@ -1,6 +1,8 @@
 package uk.ac.tees.mad.petcare.domain.model
 
 data class Pet(
+    val localId: Int = 0,
+    val firebaseId: String? = null,
     val name: String = "",
     val species: String = "",
     val age: Int = 0,

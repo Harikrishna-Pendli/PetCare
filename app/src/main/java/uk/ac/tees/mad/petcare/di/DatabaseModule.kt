@@ -25,5 +25,6 @@ object DatabaseModule {
             .build()
 
     @Provides
+    @Singleton
     fun providePetDao(db: PetDatabase): PetDao = db.petDao()
 }
