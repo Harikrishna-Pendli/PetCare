@@ -12,9 +12,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SwipeToDismiss
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,6 +32,7 @@ import uk.ac.tees.mad.petcare.presentation.ui.components.PetCard
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetDialog
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PetProfileScreen(
     viewModel: PetViewModel = hiltViewModel(),
@@ -64,10 +70,36 @@ fun PetProfileScreen(
                     .padding(innerPadding)
                     .padding(12.dp)
             ) {
-                items(pets) { pet ->
-                    PetCard(
-                        pet = pet,
-                        onClick = { petToEdit = pet }
+                items(pets, key = { it.localId }) { pet ->
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = { dismissValue ->
+                            if (dismissValue == DismissValue.DismissedToEnd ||
+                                dismissValue == DismissValue.DismissedToStart
+                            ) {
+                                viewModel.deletePet(pet.localId)
+                                true
+                            } else false
+                        }
+                    )
+
+                    SwipeToDismiss(
+                        state = dismissState,
+                        background = {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(12.dp),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Text("Delete", color = androidx.compose.material3.MaterialTheme.colorScheme.error)
+                            }
+                        },
+                        dismissContent = {
+                            PetCard(
+                                pet = pet,
+                                onClick = { petToEdit = pet }
+                            )
+                        }
                     )
                 }
             }
