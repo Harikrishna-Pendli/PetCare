@@ -16,6 +16,7 @@ import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.Button
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,12 +26,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.domain.model.Pet
+import uk.ac.tees.mad.petcare.notification.NotificationHelper
+import uk.ac.tees.mad.petcare.notification.NotificationScheduler
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetCard
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetDialog
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -42,6 +47,7 @@ fun PetProfileScreen(
     val pets by viewModel.pets.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
     var petToEdit by remember { mutableStateOf<Pet?>(null) }
+    val context = LocalContext.current
 
     LaunchedEffect(true) {
         viewModel.loadPets()
@@ -104,6 +110,19 @@ fun PetProfileScreen(
                 }
             }
         }
+//        Test notifications
+//        Button(onClick = {
+//            NotificationHelper.showNotification(
+//                context,
+//                id = 1,
+//                title = "Test Notification",
+//                body = "Notifications are working!"
+//            )
+//        }) {
+//            Text("Show Test Notification")
+//        }
+
+
     }
     if (showAddDialog) {
         PetDialog(
