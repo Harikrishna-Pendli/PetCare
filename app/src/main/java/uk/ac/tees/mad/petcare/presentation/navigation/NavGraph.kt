@@ -1,5 +1,7 @@
 package uk.ac.tees.mad.petcare.presentation.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -8,14 +10,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.education.name.presentation.ui.screen.auth.LoginScreen
 import com.education.name.presentation.ui.screen.auth.SignupScreen
+import uk.ac.tees.mad.petcare.presentation.ui.screen.QrScanScreen
+import uk.ac.tees.mad.petcare.presentation.ui.screen.UserProfileScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.profile.PetProfileScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.splash.SplashScreen
+import uk.ac.tees.mad.petcare.presentation.ui.screen.tips.TipScreen
 
 object Routes {
     const val SIGNUP = "signup"
     const val LOGIN = "login"
     const val SPLASH = "splash"
     const val PET_PROFILE = "pet_profile"
+    const val TIPS = "tips"
+    const val QR_SCAN = "qr_scan"
+    const val USER_PROFILE = "user_profile"
 }
 
 @Composable
@@ -54,9 +62,22 @@ fun NavGraph(
 
         composable(Routes.PET_PROFILE) {
             PetProfileScreen(
-                onAddPetClick = { TODO() },
-                onEditPetClick = { TODO() }
+                onAddPet = { TODO() },
+                onBackClick = { navController.navigateUp() }
             )
+        }
+        composable(Routes.TIPS) {
+                TipScreen()
+        }
+
+        composable(Routes.QR_SCAN) {
+                QrScanScreen()
+
+        }
+
+        composable(Routes.USER_PROFILE) {
+                UserProfileScreen()
         }
     }
 }
+

@@ -48,4 +48,16 @@ class PetViewModel @Inject constructor(
             petRepository.deletePet(id)
         }
     }
+
+    private val _openAddPetDialog = MutableStateFlow(false)
+    val openAddPetDialog: StateFlow<Boolean> = _openAddPetDialog
+
+    fun triggerAddPetDialog() {
+        _openAddPetDialog.value = true
+    }
+
+    fun consumeAddPetDialog() {
+        _openAddPetDialog.value = false
+    }
+
 }

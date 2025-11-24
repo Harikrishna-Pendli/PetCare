@@ -4,15 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.navigation.Navigator
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import uk.ac.tees.mad.petcare.presentation.navigation.BottomNavBar
 import uk.ac.tees.mad.petcare.presentation.navigation.NavGraph
+import uk.ac.tees.mad.petcare.presentation.navigation.Routes
 import uk.ac.tees.mad.petcare.presentation.ui.theme.PetCareTheme
+import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -20,9 +30,41 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController= rememberNavController()
+            val navController = rememberNavController()
+            val currentRoute =
+                navController.currentBackStackEntryAsState().value?.destination?.route
+            val showBottomBar = currentRoute in listOf(
+                Routes.TIPS,
+                Routes.PET_PROFILE,
+                Routes.USER_PROFILE,
+                Routes.QR_SCAN
+            )
+            val petViewModel: PetViewModel = hiltViewModel()
+
             PetCareTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    bottomBar = {
+                        if (showBottomBar) {
+                            BottomNavBar(navController)
+                        }
+                    },
+//                    floatingActionButton = {
+//                        if (currentRoute == "pet_profile") {
+//                            FloatingActionButton(
+//                                onClick = {
+//                                    petViewModel.triggerAddPetDialog()
+//                                },                                containerColor = MaterialTheme.colorScheme.surface,
+//                                contentColor = MaterialTheme.colorScheme.onSurface,
+//                                elevation = FloatingActionButtonDefaults.elevation(
+//                                    defaultElevation = 8.dp,
+//                                    pressedElevation = 12.dp
+//                                )
+//                            ) {
+//                                Icon(Icons.Default.Add, contentDescription = "Add Pet")
+//                            }
+//                        }
+//                    }
+                ) { innerPadding ->
                     NavGraph(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding)
