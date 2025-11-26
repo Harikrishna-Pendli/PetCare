@@ -25,6 +25,7 @@ import androidx.room.util.TableInfo.Column
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import uk.ac.tees.mad.petcare.R
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SplashScreen(
@@ -55,4 +56,34 @@ fun SplashScreen(
             modifier = Modifier.size(60.dp)
         )
     }
+}
+
+@Composable
+fun SplashScreenPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            "PetCare",
+            style = MaterialTheme.typography.headlineLarge,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(16.dp))
+        Image(
+            painter = painterResource(R.drawable.paw),
+            contentDescription = "pet_care",
+            modifier = Modifier.size(60.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview_UI() {
+    SplashScreenPreview()
 }

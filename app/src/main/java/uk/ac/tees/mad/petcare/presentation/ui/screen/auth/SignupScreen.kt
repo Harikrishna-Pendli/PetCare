@@ -1,4 +1,4 @@
-package com.education.name.presentation.ui.screen.auth
+package uk.ac.tees.mad.petcare.presentation.ui.screen.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.domain.model.User
 import uk.ac.tees.mad.petcare.presentation.viewmodel.AuthViewModel
 import uk.ac.tees.mad.petcare.util.UiState
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SignupScreen(
@@ -101,3 +102,91 @@ fun SignupScreen(
         }
     }
 }
+
+@Composable
+fun SignupScreenPreview() {
+
+    var email by remember { mutableStateOf("example@mail.com") }
+    var password by remember { mutableStateOf("password123") }
+    var name by remember { mutableStateOf("John Doe") }
+
+    // Fake state for preview
+    val authState = remember { mutableStateOf<UiState<Unit>>(UiState.Idle) }
+
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+
+                Text("Sign up to continue", style = MaterialTheme.typography.headlineSmall)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Name") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { authState.value = UiState.Loading },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = authState.value !is UiState.Loading
+                ) {
+                    Text(
+                        when (authState.value) {
+                            is UiState.Loading -> "Signing Up..."
+                            else -> "Sign Up"
+                        }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Mock error preview
+                if (authState.value is UiState.Error) {
+                    Text(
+                        text = (authState.value as UiState.Error).message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignupScreenPreview_UI() {
+    SignupScreenPreview()
+}
+
