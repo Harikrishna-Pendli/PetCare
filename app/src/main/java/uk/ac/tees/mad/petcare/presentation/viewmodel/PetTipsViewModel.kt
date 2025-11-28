@@ -10,8 +10,10 @@ import uk.ac.tees.mad.petcare.data.datasource.remote.RetrofitInstance
 import uk.ac.tees.mad.petcare.data.model.DogFact
 import javax.inject.Inject
 
+enum class PetType { DOG, CAT }
+
 @HiltViewModel
-class DogFactsViewModel @Inject constructor(): ViewModel() {
+class PetTipsViewModel @Inject constructor(): ViewModel() {
 
     private val _facts = MutableStateFlow<List<DogFact>>(emptyList())
     val facts: StateFlow<List<DogFact>> = _facts
@@ -22,15 +24,26 @@ class DogFactsViewModel @Inject constructor(): ViewModel() {
     private val _error = MutableStateFlow(false)
     val error: StateFlow<Boolean> = _error
 
+    private val _selectedType = MutableStateFlow(PetType.DOG)
+    val selectedType: StateFlow<PetType> = _selectedType
+
+//    private val apiKey = "your-api-key"
     private val apiKey = "live_bddE6mgA93mlUqrDrxCb8VFeDHr2ZioXYNIOMarviVc56ry5cYu7On2Z1Ubd6u1y"
 
-    fun fetchDogFacts() {
+    fun changeType(type: PetType) {
+        _selectedType.value = type
+        fetchTips()
+    }
+
+    fun fetchTips() {
         viewModelScope.launch {
             _loading.value = true
             _error.value = false
             try {
-                val response = RetrofitInstance.api.getDogFacts(apiKey, limit = 5)
-                _facts.value = response
+                _facts.value = when (_selectedType.value) {
+                    PetType.DOG -> RetrofitInstance.api.getDogFacts(apiKey, limit = 5)
+                    PetType.CAT -> RetrofitInstance.catApi.getCatFacts(limit = 5)
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _error.value = true

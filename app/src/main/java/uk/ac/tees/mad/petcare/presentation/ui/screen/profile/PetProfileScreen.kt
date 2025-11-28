@@ -2,9 +2,7 @@ package uk.ac.tees.mad.petcare.presentation.ui.screen.profile
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,7 +34,6 @@ import uk.ac.tees.mad.petcare.presentation.ui.components.PetCard
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetDialog
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
-import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -192,111 +189,4 @@ fun PetProfileScreen(
             showAddDialog = true
         }
     }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun PetProfileScreenPreview() {
-
-    val mockPets = listOf(
-        Pet(
-            localId = 1,
-            name = "Buddy",
-            species = "Dog",
-            age = 3,
-            vaccinationInfo = "Fully vaccinated",
-            foodPreferences = "Chicken & Rice"
-        ),
-        Pet(
-            localId = 2,
-            name = "Luna",
-            species = "Cat",
-            age = 2,
-            vaccinationInfo = "Needs booster",
-            foodPreferences = "Tuna"
-        )
-    )
-
-    var showAddDialog by remember { mutableStateOf(false) }
-    var petToEdit by remember { mutableStateOf<Pet?>(null) }
-
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = { showAddDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Pet")
-            }
-        }
-    ) { innerPadding ->
-
-        ProfileHeader("Pet Profile")
-
-        Spacer(Modifier.height(20.dp))
-        if (mockPets.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("No pets added yet 🐾")
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(12.dp)
-            ) {
-                items(mockPets, key = { it.localId }) { pet ->
-
-                    val dismissState = rememberDismissState(
-                        confirmStateChange = { false } // no delete in preview
-                    )
-
-                    SwipeToDismiss(
-                        state = dismissState,
-                        background = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(20.dp),
-                                contentAlignment = Alignment.CenterEnd
-                            ) {
-                                Text("Delete", color = MaterialTheme.colorScheme.error)
-                            }
-                        },
-                        dismissContent = {
-                            PetCard(
-                                pet = pet,
-                                onClick = { petToEdit = pet }
-                            )
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-    if (showAddDialog) {
-        PetDialog(
-            title = "Add Pet",
-            onDismiss = { showAddDialog = false },
-            onSave = { showAddDialog = false }
-        )
-    }
-
-    if (petToEdit != null) {
-        PetDialog(
-            title = "Edit Pet",
-            initialPet = petToEdit,
-            onDismiss = { petToEdit = null },
-            onSave = { petToEdit = null }
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PetProfileScreenPreview_UI() {
-    PetProfileScreenPreview()
 }

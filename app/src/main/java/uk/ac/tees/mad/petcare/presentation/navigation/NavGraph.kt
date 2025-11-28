@@ -1,13 +1,15 @@
 package uk.ac.tees.mad.petcare.presentation.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import uk.ac.tees.mad.petcare.presentation.ui.screen.auth.LoginScreen
-import uk.ac.tees.mad.petcare.presentation.ui.screen.auth.SignupScreen
+import com.education.name.presentation.ui.screen.auth.LoginScreen
+import com.education.name.presentation.ui.screen.auth.SignupScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.QrScanScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.UserProfileScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.profile.PetProfileScreen

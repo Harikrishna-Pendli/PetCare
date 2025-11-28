@@ -26,4 +26,17 @@ object RetrofitInstance {
     val api: DogApiService by lazy {
         retrofit.create(DogApiService::class.java)
     }
+
+    private val catRetrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://catfact.ninja/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    val catApi: CatApiService by lazy {
+        catRetrofit.create(CatApiService::class.java)
+    }
+
 }
