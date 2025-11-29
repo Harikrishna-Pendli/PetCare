@@ -1,7 +1,5 @@
 package uk.ac.tees.mad.petcare.presentation.navigation
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -67,16 +65,18 @@ fun NavGraph(
             )
         }
         composable(Routes.TIPS) {
-                TipsScreen()
+            TipsScreen()
         }
 
         composable(Routes.QR_SCAN) {
-                QrScanScreen()
+            QrScanScreen()
 
         }
 
         composable(Routes.USER_PROFILE) {
-                UserProfileScreen()
+            UserProfileScreen(
+                onBack = { navController.navigateUp() },
+                onLogout = { navController.navigate(Routes.LOGIN) { popUpTo(0) } })
         }
     }
 }

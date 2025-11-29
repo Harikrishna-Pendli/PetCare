@@ -5,4 +5,5 @@ import uk.ac.tees.mad.petcare.domain.model.User
 interface UserRepository {
     suspend fun createUser(user: User)
     suspend fun getUserById(email: String): User
+    suspend fun updateNotifications(uid: String, enabled: Boolean)
 }

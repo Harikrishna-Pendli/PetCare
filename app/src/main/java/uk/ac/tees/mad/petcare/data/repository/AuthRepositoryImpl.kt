@@ -1,8 +1,7 @@
 package uk.ac.tees.mad.petcare.data.repository
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.tasks.await
 import uk.ac.tees.mad.petcare.domain.model.User
 import uk.ac.tees.mad.petcare.domain.repository.AuthRepository
@@ -12,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val realtime: FirebaseDatabase
 ) : AuthRepository {
 
     override suspend fun login(email: String, password: String): Result<User> = try {
@@ -31,9 +30,10 @@ class AuthRepositoryImpl @Inject constructor(
         val user = User(name = "", email = firebaseUser.email ?: "")
 
         // Save user under UID
-        firestore.collection("users")
-            .document(firebaseUser.uid)
-            .set(user)
+        realtime.reference
+            .child("users")
+            .child(firebaseUser.uid)
+            .setValue(user)
             .await()
 
         Result.success(user)

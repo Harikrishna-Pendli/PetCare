@@ -2,20 +2,20 @@ package uk.ac.tees.mad.petcare.data.datasource.remote
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
 import uk.ac.tees.mad.petcare.domain.model.User
 import javax.inject.Inject
 
 class UserDataSource @Inject constructor(
-    private val firestore: FirebaseFirestore,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val realtime: FirebaseDatabase
 ) {
     fun createUser(user: User) {
-        val uid = auth.currentUser?.uid ?: user.email
-        firestore.collection("users")
-            .document(user.email)
-            .set(user)
-            .addOnSuccessListener { Log.d("USER DATASOURCE","user document created") }
-            .addOnFailureListener { e -> Log.d("USER DATASOURCE","user document creation fail:- "+e.message) }
+        val uid = auth.currentUser?.uid ?: return
+        realtime.getReference("users")
+            .child(uid)
+            .setValue(user)
+            .addOnSuccessListener { Log.d("USER", "User saved to Realtime DB") }
+            .addOnFailureListener { e -> Log.e("USER", "Fail: ${e.message}") }
     }
 }

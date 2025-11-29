@@ -2,8 +2,6 @@ package uk.ac.tees.mad.petcare.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,11 +22,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
-    @Provides @Singleton
-    fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+//    @Provides @Singleton
+//    fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
 
     @Provides
     @Singleton
@@ -36,33 +35,41 @@ object FirebaseModule {
         FirebaseDatabase.getInstance().apply {
             setPersistenceEnabled(true)
         }
+
     // ---------- DATASOURCES ----------
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideAuthDataSource(auth: FirebaseAuth): AuthDataSource =
         AuthDataSource(auth)
 
-    @Provides @Singleton
-    fun provideUserDataSource(firestore: FirebaseFirestore, auth: FirebaseAuth): UserDataSource =
-        UserDataSource(firestore, auth)
+    //
+    @Provides
+    @Singleton
+    fun provideUserDataSource(auth: FirebaseAuth, realtime: FirebaseDatabase): UserDataSource =
+        UserDataSource(auth, realtime)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun providePetDataSource(auth: FirebaseAuth, realtime: FirebaseDatabase): PetDataSource =
         PetDataSource(auth, realtime)
 
     // ---------- REPOSITORIES ----------
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideAuthRepository(
         auth: FirebaseAuth,
-        firestore: FirebaseFirestore
-    ): AuthRepository = AuthRepositoryImpl(auth, firestore)
+        realtime: FirebaseDatabase
+    ): AuthRepository = AuthRepositoryImpl(auth, realtime)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideUserRepository(
         dataSource: UserDataSource,
-        firestore: FirebaseFirestore
-    ): UserRepository = UserRepositoryImpl(dataSource, firestore)
+        realtime: FirebaseDatabase
+    ): UserRepository = UserRepositoryImpl(dataSource, realtime)
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun providePetRepository(
         dao: PetDao,
         petDataSource: PetDataSource
