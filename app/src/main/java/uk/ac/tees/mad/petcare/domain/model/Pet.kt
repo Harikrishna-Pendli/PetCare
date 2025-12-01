@@ -5,7 +5,8 @@ data class Pet(
     val firebaseId: String? = null,
     val name: String = "",
     val species: String = "",
-    val age: Int = 0,
+    val age: String = 0,
     val vaccinationInfo: String = "",
-    val foodPreferences: String = ""
+    val foodPreferences: String = "",
+    val type: String
 )

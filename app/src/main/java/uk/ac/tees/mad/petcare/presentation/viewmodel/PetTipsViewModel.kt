@@ -13,9 +13,9 @@ import javax.inject.Inject
 enum class PetType { DOG, CAT }
 
 @HiltViewModel
-class PetTipsViewModel @Inject constructor(): ViewModel() {
+open class PetTipsViewModel @Inject constructor(): ViewModel() {
 
-    private val _facts = MutableStateFlow<List<DogFact>>(emptyList())
+    protected val _facts = MutableStateFlow<List<DogFact>>(emptyList())
     val facts: StateFlow<List<DogFact>> = _facts
 
     private val _loading = MutableStateFlow(true)

@@ -1,6 +1,7 @@
-package uk.ac.tees.mad.petcare.presentation.ui.screen
+package uk.ac.tees.mad.petcare.presentation.ui.screen.profile
 
 import android.Manifest
+import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,9 +38,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import uk.ac.tees.mad.petcare.presentation.FakeUserProfileVM
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader
 import uk.ac.tees.mad.petcare.presentation.viewmodel.UserProfileViewModel
-
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun UserProfileScreen(
@@ -117,7 +119,7 @@ fun UserProfileScreen(
                 onCheckedChange = {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         ActivityCompat.requestPermissions(
-                            context as android.app.Activity,
+                            context as Activity,
                             arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                             100
                         )
@@ -167,6 +169,18 @@ fun UserProfileScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewUserProfile() {
+    MaterialTheme {
+        UserProfileScreen(
+//            viewModel = FakeUserProfileVM(),
+            onLogout = {},
+            onBack = {}
         )
     }
 }

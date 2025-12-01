@@ -1,14 +1,12 @@
 package uk.ac.tees.mad.petcare.data.repository
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import uk.ac.tees.mad.petcare.data.datasource.remote.PetDataSource
 import uk.ac.tees.mad.petcare.data.local.PetDao
 import uk.ac.tees.mad.petcare.data.model.PetEntity
 import uk.ac.tees.mad.petcare.domain.model.Pet
 import uk.ac.tees.mad.petcare.domain.repository.PetRepository
-import java.util.UUID
 import javax.inject.Inject
 
 class PetRepositoryImpl @Inject constructor(
@@ -85,7 +83,8 @@ class PetRepositoryImpl @Inject constructor(
                     species = it.species,
                     age = it.age,
                     vaccinationInfo = it.vaccinationInfo ?: "",
-                    foodPreferences = it.foodPreferences ?: ""
+                    foodPreferences = it.foodPreferences ?: "",
+                    type = "Cat"
                 )
             }
         }

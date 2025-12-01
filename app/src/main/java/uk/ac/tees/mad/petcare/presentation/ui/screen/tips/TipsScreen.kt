@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
@@ -27,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import uk.ac.tees.mad.petcare.presentation.FakeTipsViewModel
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetTipsViewModel
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetType
@@ -90,7 +92,7 @@ fun TipsScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("Failed to load tips.", color = Color.Red)
+                        Text("Failed to load tips.", color = MaterialTheme.colorScheme.error)
                     }
                 }
 
@@ -131,3 +133,15 @@ fun TipsScreen(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewTipsScreen() {
+    MaterialTheme {
+        TipsScreen(
+//            viewModel = FakeTipsViewModel(),
+            onBack = {}
+        )
+    }
+}
+

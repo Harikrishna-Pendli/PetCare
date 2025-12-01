@@ -1,4 +1,4 @@
-package com.education.name.presentation.ui.screen.auth
+package uk.ac.tees.mad.petcare.presentation.ui.screen.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,8 +9,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 //import com.education.name.presentation.ui.viewmodel.UserViewModel
 import uk.ac.tees.mad.petcare.domain.model.User
+import uk.ac.tees.mad.petcare.presentation.FakeAuthViewModel
 import uk.ac.tees.mad.petcare.presentation.viewmodel.AuthViewModel
 import uk.ac.tees.mad.petcare.util.UiState
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SignupScreen(
@@ -99,5 +101,16 @@ fun SignupScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSignupScreen() {
+    MaterialTheme {
+        SignupScreen(
+//            viewModel = FakeAuthViewModel(),
+            onSignupSuccess = {}
+        )
     }
 }

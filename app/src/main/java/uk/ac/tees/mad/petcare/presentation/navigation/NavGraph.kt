@@ -6,10 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.education.name.presentation.ui.screen.auth.LoginScreen
-import com.education.name.presentation.ui.screen.auth.SignupScreen
+import uk.ac.tees.mad.petcare.presentation.ui.screen.auth.LoginScreen
+import uk.ac.tees.mad.petcare.presentation.ui.screen.auth.SignupScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.QrScanScreen
-import uk.ac.tees.mad.petcare.presentation.ui.screen.UserProfileScreen
+import uk.ac.tees.mad.petcare.presentation.ui.screen.profile.UserProfileScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.profile.PetProfileScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.splash.SplashScreen
 import uk.ac.tees.mad.petcare.presentation.ui.screen.tips.TipsScreen

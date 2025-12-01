@@ -13,15 +13,15 @@ import uk.ac.tees.mad.petcare.util.UiState
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(
+open class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _signUpState = MutableStateFlow<UiState<Unit>>(UiState.Idle)
-    val signUpState: StateFlow<UiState<Unit>> = _signUpState
+    open val signUpState: StateFlow<UiState<Unit>> = _signUpState
 
     private val _signInState = MutableStateFlow<UiState<User>>(UiState.Idle)
-    val signInState: StateFlow<UiState<User>> = _signInState
+    open val signInState: StateFlow<UiState<User>> = _signInState
 
     fun signUp(email: String, password: String) {
         viewModelScope.launch {

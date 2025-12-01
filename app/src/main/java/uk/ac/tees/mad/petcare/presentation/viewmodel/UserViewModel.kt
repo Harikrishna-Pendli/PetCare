@@ -12,12 +12,12 @@ import uk.ac.tees.mad.petcare.domain.repository.UserRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class UserProfileViewModel @Inject constructor(
+open class UserProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val auth: FirebaseAuth
 ) : ViewModel() {
 
-    private val _user = MutableStateFlow(User())
+    protected val _user = MutableStateFlow(User())
     val user: StateFlow<User> = _user
 
     private val _loading = MutableStateFlow(false)

@@ -3,7 +3,6 @@ package uk.ac.tees.mad.petcare.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import uk.ac.tees.mad.petcare.domain.model.Pet
-import java.util.UUID
 
 @Entity(tableName = "pets")
 data class PetEntity(
@@ -26,7 +25,8 @@ fun PetEntity.toDomainModel() = uk.ac.tees.mad.petcare.domain.model.Pet(
     species = species,
     age = age,
     vaccinationInfo = vaccinationInfo ?: "",
-    foodPreferences = foodPreferences ?: ""
+    foodPreferences = foodPreferences ?: "",
+    type = "Cat"
 )
 
 fun Pet.toEntity(

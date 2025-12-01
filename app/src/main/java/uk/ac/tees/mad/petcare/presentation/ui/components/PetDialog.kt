@@ -55,7 +55,8 @@ fun PetDialog(
                                 species = species.trim(),
                                 age = age.toIntOrNull() ?: 0,
                                 vaccinationInfo = vaccination.trim(),
-                                foodPreferences = food.trim()
+                                foodPreferences = food.trim(),
+                                type = "Cat"
                             )
                         )
                         onDismiss()

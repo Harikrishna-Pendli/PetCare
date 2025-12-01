@@ -11,11 +11,11 @@ import uk.ac.tees.mad.petcare.domain.repository.PetRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class PetViewModel @Inject constructor(
+open class PetViewModel @Inject constructor(
     private val petRepository: PetRepository
 ) : ViewModel() {
 
-    private val _pets = MutableStateFlow<List<Pet>>(emptyList())
+    val _pets = MutableStateFlow<List<Pet>>(emptyList())
     val pets: StateFlow<List<Pet>> get() = _pets
 
 
