@@ -1,8 +1,6 @@
 package uk.ac.tees.mad.petcare.presentation.ui.screen.profile
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,10 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.domain.model.Pet
-import uk.ac.tees.mad.petcare.presentation.FakePetViewModel
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetCard
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetDialog
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader

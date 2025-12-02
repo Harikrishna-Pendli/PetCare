@@ -35,13 +35,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import uk.ac.tees.mad.petcare.presentation.FakeUserProfileVM
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader
 import uk.ac.tees.mad.petcare.presentation.viewmodel.UserProfileViewModel
-import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun UserProfileScreen(
