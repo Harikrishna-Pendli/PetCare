@@ -3,6 +3,10 @@ package uk.ac.tees.mad.petcare.presentation.ui.screen.qr
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -11,14 +15,29 @@ fun QRScanScreen(
     onBack: () -> Unit = {},
     onScanCompleted: (String) -> Unit = {}
 ) {
-    RequestCameraPermission {
-        Column(
+    var scannedText by remember { mutableStateOf<String?>(null) }
+    var permissionGranted by remember { mutableStateOf(false) }
+
+
+    RequestCameraPermission(
+        onGranted = {
+            permissionGranted = true
+        }
+    )
+
+    if (!permissionGranted) {
+        return
+    }
+    Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(0.dp)
         ) {
             CameraPreview(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                onScanResult = { result ->
+                    scannedText = result
+                    onScanCompleted(result)
+                }
             )
 
             Surface(
@@ -33,4 +52,4 @@ fun QRScanScreen(
             }
         }
     }
-}
+

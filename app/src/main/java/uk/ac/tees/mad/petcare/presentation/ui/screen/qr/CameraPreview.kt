@@ -2,6 +2,7 @@ package uk.ac.tees.mad.petcare.presentation.ui.screen.qr
 
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.compose.runtime.*
@@ -12,7 +13,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 
 @Composable
-fun CameraPreview(modifier: Modifier = Modifier) {
+fun CameraPreview(
+    modifier: Modifier = Modifier,
+    onScanResult: (String) -> Unit
+) {
     val context = LocalContext.current
     val lifecycleOwner = context as LifecycleOwner
 
@@ -37,11 +41,23 @@ fun CameraPreview(modifier: Modifier = Modifier) {
 
                 val selector = CameraSelector.DEFAULT_BACK_CAMERA
 
+                val analysis = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .build()
+
+                analysis.setAnalyzer(
+                    ContextCompat.getMainExecutor(ctx),
+                    QRAnalyzer { result ->
+                        onScanResult(result)
+                    }
+                )
+
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     lifecycleOwner,
                     selector,
-                    preview
+                    preview,
+                    analysis
                 )
             }, ContextCompat.getMainExecutor(ctx))
 

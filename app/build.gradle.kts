@@ -135,4 +135,8 @@ dependencies {
 
     implementation("androidx.compose.material:material:1.9.4")
 
+    // MLKit Barcode Scanning
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+
+
 }
