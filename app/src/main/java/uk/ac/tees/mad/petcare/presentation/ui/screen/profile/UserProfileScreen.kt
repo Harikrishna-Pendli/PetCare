@@ -135,9 +135,9 @@ fun UserProfileScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.error
-            )
+//            colors = ButtonDefaults.buttonColors(
+//                containerColor = MaterialTheme.colorScheme.error
+//            )
         ) {
             Text("Logout")
         }

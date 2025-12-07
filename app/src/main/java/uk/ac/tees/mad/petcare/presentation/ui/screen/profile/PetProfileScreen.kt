@@ -40,14 +40,19 @@ import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
 fun PetProfileScreen(
     viewModel: PetViewModel = hiltViewModel(),
     onAddPet: () -> Unit = {},
+    scannedVaccination: String? = null,
+    scannedDate: String? = null,
     onBackClick: () -> Unit = {}
 ) {
     val pets by viewModel.pets.collectAsState()
-    val openDialog by viewModel.openAddPetDialog.collectAsState()
+
     var showAddDialog by remember { mutableStateOf(false) }
     var petToEdit by remember { mutableStateOf<Pet?>(null) }
-    val context = LocalContext.current
-//
+
+    var scannedResult by remember {
+        mutableStateOf<Pair<String, String>?>(null)
+    }
+
 //    LaunchedEffect(pets, openDialog, onAddPet) {
 //
 //        // Load pets only once
@@ -67,6 +72,28 @@ fun PetProfileScreen(
 //            showAddDialog = true
 //        }
 //    }
+
+    // If scanned data is passed from QRScanScreen, store it
+    LaunchedEffect(scannedVaccination, scannedDate) {
+        if (scannedVaccination != null && scannedDate != null) {
+            scannedResult = Pair(scannedVaccination, scannedDate)
+        }
+    }
+
+    // If QR was scanned → open dialog
+    scannedResult?.let { (vaccine, date) ->
+        PetDialog(
+            title = "Add Pet (Scanned)",
+            initialVaccination = vaccine,
+            initialDate = date,
+            onDismiss = { scannedResult = null },
+            onSave = { pet ->
+                viewModel.addPet(pet)
+                scannedResult = null
+            }
+        )
+        return
+    }
 
     LaunchedEffect(true) {
         viewModel.loadPets()
@@ -167,6 +194,7 @@ fun PetProfileScreen(
             onDismiss = { showAddDialog = false },
             onSave = { pet ->
                 viewModel.addPet(pet)
+                showAddDialog = false
             }
         )
     }
@@ -175,20 +203,36 @@ fun PetProfileScreen(
             title = "Edit Pet",
             initialPet = petToEdit,
             onDismiss = { petToEdit = null },
-            onSave = { updated ->
-                viewModel.updatePet(
-                    id = petToEdit?.localId,
-                    pet = updated
-                )
+            onSave = {
+                    updatedPet ->
+                viewModel.updatePet(petToEdit?.localId, updatedPet)
                 petToEdit = null
+//                updated ->
+//                viewModel.updatePet(
+//                    id = petToEdit?.localId,
+//                    pet = updated
+//                )
+//                petToEdit = null
             }
         )
     }
-    LaunchedEffect(onAddPet) {
-        if (onAddPet != {}) {
-            showAddDialog = true
-        }
+    if (scannedResult != null) {
+        PetDialog(
+            title = "Add Pet (from QR)",
+            initialVaccination = scannedResult!!.first,
+            initialDate = scannedResult!!.second,
+            onDismiss = { scannedResult = null },
+            onSave = { newPet ->
+                viewModel.addPet(newPet)
+                scannedResult = null
+            }
+        )
     }
+//    LaunchedEffect(onAddPet) {
+//        if (onAddPet != {}) {
+//            showAddDialog = true
+//        }
+//    }
 }
 
 @Preview(showBackground = true)

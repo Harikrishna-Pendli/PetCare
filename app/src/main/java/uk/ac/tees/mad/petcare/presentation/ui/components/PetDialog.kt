@@ -22,14 +22,20 @@ import uk.ac.tees.mad.petcare.domain.model.Pet
 fun PetDialog(
     title: String,
     initialPet: Pet? = null,
+    initialVaccination: String? = null,
+    initialDate: String? = null,
     onDismiss: () -> Unit,
     onSave: (Pet) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var species by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
-    var vaccination by remember { mutableStateOf("") }
-    var food by remember { mutableStateOf("") }
+    var vaccination by remember {
+        mutableStateOf(initialPet?.vaccinationInfo ?: initialVaccination ?: "")
+    }
+    var food by remember { mutableStateOf(initialPet?.foodPreferences ?: "") }
+
+    val dateDisplay = initialDate ?: ""
 
     LaunchedEffect(initialPet) {
         initialPet?.let {
@@ -56,7 +62,7 @@ fun PetDialog(
                                 age = age.toIntOrNull() ?: 0,
                                 vaccinationInfo = vaccination.trim(),
                                 foodPreferences = food.trim(),
-                                type = "Cat"
+                                type = species.trim()
                             )
                         )
                         onDismiss()
@@ -98,6 +104,12 @@ fun PetDialog(
                     label = { Text("Vaccination Info") },
                     modifier = Modifier.fillMaxWidth()
                 )
+
+                if (dateDisplay.isNotBlank()) {
+                    Text(
+                        text = "Vaccination Date: $dateDisplay",
+                    )
+                }
 
                 TextField(
                     value = food,

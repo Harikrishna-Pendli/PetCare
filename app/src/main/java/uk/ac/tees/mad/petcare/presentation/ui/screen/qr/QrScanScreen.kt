@@ -12,11 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import uk.ac.tees.mad.petcare.utils.QrParser
 
 @Composable
 fun QRScanScreen(
     onBack: () -> Unit = {},
-    onScanCompleted: (String) -> Unit = {}
+    onScanCompleted: (String, String) -> Unit // vaccine, date
 ) {
     var scannedText by remember { mutableStateOf("") }
     var permissionGranted by remember { mutableStateOf(false) }
@@ -39,8 +40,12 @@ fun QRScanScreen(
                 modifier = Modifier.weight(1f),
                 onScanResult = { result ->
                     scannedText = result
-                    onScanCompleted(result)
-                }
+                    val parsed = QrParser.parseVaccinationData(result)
+
+                    if (parsed != null) {
+                        val (vaccine, date) = parsed
+                        onScanCompleted(vaccine, date)
+                    }                }
             )
         ScannerOverlay()
 
@@ -57,7 +62,7 @@ fun QRScanScreen(
         Surface(
                 tonalElevation = 3.dp,
                 modifier = Modifier.fillMaxWidth()
-                    .align(Alignment.BottomCenter as Alignment.Horizontal)
+//                    .align(Alignment.Center)
         ) {
             Column(
                 modifier = Modifier
