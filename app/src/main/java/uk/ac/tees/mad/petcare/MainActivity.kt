@@ -5,15 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -33,12 +26,11 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val currentRoute =
                 navController.currentBackStackEntryAsState().value?.destination?.route
-            val showBottomBar = currentRoute in listOf(
-                Routes.TIPS,
-                Routes.PET_PROFILE,
-                Routes.USER_PROFILE,
-                Routes.QR_SCAN
-            )
+            val showBottomBar =
+                currentRoute?.startsWith(Routes.PET_PROFILE) == true ||
+                        currentRoute == Routes.TIPS ||
+                        currentRoute == Routes.USER_PROFILE ||
+                        currentRoute == Routes.QR_SCAN
             val petViewModel: PetViewModel = hiltViewModel()
 
             PetCareTheme {

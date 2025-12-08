@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,12 +31,13 @@ fun PetDialog(
     var name by remember { mutableStateOf("") }
     var species by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
+
     var vaccination by remember {
         mutableStateOf(initialPet?.vaccinationInfo ?: initialVaccination ?: "")
     }
+    var date by remember { mutableStateOf(initialPetDate(initialPet, initialDate)) }
     var food by remember { mutableStateOf(initialPet?.foodPreferences ?: "") }
-
-    val dateDisplay = initialDate ?: ""
+//    var date by remember { mutableStateOf(initialDate ?: "") }
 
     LaunchedEffect(initialPet) {
         initialPet?.let {
@@ -44,6 +46,7 @@ fun PetDialog(
             age = it.age.toString()
             vaccination = it.vaccinationInfo
             food = it.foodPreferences
+            date = initialPetDate(it, initialDate)
         }
     }
 
@@ -53,19 +56,22 @@ fun PetDialog(
             Button(
                 onClick = {
 //                    if (name.isNotBlank()) {
-                        onSave(
-                            Pet(
-                                localId = initialPet?.localId ?: 0,
-                                firebaseId = initialPet?.firebaseId,
-                                name = name.trim(),
-                                species = species.trim(),
-                                age = age.toIntOrNull() ?: 0,
-                                vaccinationInfo = vaccination.trim(),
-                                foodPreferences = food.trim(),
-                                type = species.trim()
-                            )
+                    val finalVaccination = if (date.isNotBlank()) {
+                        "$vaccination (Due: $date)"
+                    } else vaccination.trim()
+                    onSave(
+                        Pet(
+                            localId = initialPet?.localId ?: 0,
+                            firebaseId = initialPet?.firebaseId,
+                            name = name.trim(),
+                            species = species.trim(),
+                            age = age.toIntOrNull() ?: 0,
+                            vaccinationInfo = finalVaccination,
+                            foodPreferences = food.trim(),
+                            type = species.trim()
                         )
-                        onDismiss()
+                    )
+                    onDismiss()
 //                    }
                 }
             ) { Text("Save") }
@@ -105,11 +111,12 @@ fun PetDialog(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                if (dateDisplay.isNotBlank()) {
-                    Text(
-                        text = "Vaccination Date: $dateDisplay",
-                    )
-                }
+                OutlinedTextField(
+                    value = date,
+                    onValueChange = { date = it },
+                    label = { Text("Vaccination Due Date") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
                 TextField(
                     value = food,
@@ -120,4 +127,18 @@ fun PetDialog(
             }
         }
     )
+}
+
+// helper to set initialDate if provided otherwise parse from initialPet.vaccinationInfo if possible
+private fun initialPetDate(initialPet: Pet?, initialDate: String?): String {
+    if (!initialDate.isNullOrBlank()) return initialDate
+    initialPet?.vaccinationInfo?.let { v ->
+        // crude extraction: look for "(Due: ...)"
+        val regex = Regex("\\(Due:\\s*([^\\)]+)\\)")
+        val m = regex.find(v)
+        if (m != null && m.groupValues.size >= 2) {
+            return m.groupValues[1].trim()
+        }
+    }
+    return ""
 }

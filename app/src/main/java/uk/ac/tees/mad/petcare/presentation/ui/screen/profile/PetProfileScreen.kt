@@ -1,7 +1,10 @@
 package uk.ac.tees.mad.petcare.presentation.ui.screen.profile
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,14 +28,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.domain.model.Pet
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetCard
 import uk.ac.tees.mad.petcare.presentation.ui.components.PetDialog
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader
+import uk.ac.tees.mad.petcare.presentation.ui.screen.qr.EditVaccinationScreen
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -49,50 +54,56 @@ fun PetProfileScreen(
     var showAddDialog by remember { mutableStateOf(false) }
     var petToEdit by remember { mutableStateOf<Pet?>(null) }
 
-    var scannedResult by remember {
-        mutableStateOf<Pair<String, String>?>(null)
-    }
+    var editVaccine by remember { mutableStateOf<String?>(null) }
+    var editDate by remember { mutableStateOf<String?>(null) }
+    var pendingVaccination by remember { mutableStateOf<String?>(null) }
+    var pendingDate by remember { mutableStateOf<String?>(null) }
 
-//    LaunchedEffect(pets, openDialog, onAddPet) {
-//
-//        // Load pets only once
-//        if (pets.isEmpty()) {
-//            viewModel.loadPets()
-//        }
-//
-//        // Trigger from ViewModel (FAB press)
-//        if (openDialog) {
-//            viewModel.consumeAddPetDialog()
-//            petToEdit = null
-//            showAddDialog = true
-//        }
-//
-//        // Trigger from screen params (if needed)
-//        if (onAddPet != {}) {
-//            showAddDialog = true
-//        }
-//    }
 
     // If scanned data is passed from QRScanScreen, store it
     LaunchedEffect(scannedVaccination, scannedDate) {
-        if (scannedVaccination != null && scannedDate != null) {
-            scannedResult = Pair(scannedVaccination, scannedDate)
+        if (!scannedVaccination.isNullOrBlank() && !scannedDate.isNullOrBlank()) {
+            editVaccine = scannedVaccination
+            editDate = scannedDate
         }
     }
 
-    // If QR was scanned → open dialog
-    scannedResult?.let { (vaccine, date) ->
-        PetDialog(
-            title = "Add Pet (Scanned)",
-            initialVaccination = vaccine,
-            initialDate = date,
-            onDismiss = { scannedResult = null },
-            onSave = { pet ->
-                viewModel.addPet(pet)
-                scannedResult = null
+    if (editVaccine != null && editDate != null) {
+        EditVaccinationScreen(
+            vaccine = editVaccine!!,
+            date = editDate!!,
+            onCancel = {
+                editVaccine = null
+                editDate = null
+            },
+            onProceed = { v, d ->
+                // proceed to show Add Pet dialog pre-filled
+                editVaccine = null
+                editDate = null
+                pendingVaccination = v
+                pendingDate = d
+                showAddDialog = true
             }
         )
-        return
+    }
+
+    if (showAddDialog && pendingVaccination != null) {
+        PetDialog(
+            title = "Add Pet (Scanned)",
+            initialVaccination = pendingVaccination,
+            initialDate = pendingDate,
+            onDismiss = {
+                showAddDialog = false
+                pendingVaccination = null
+                pendingDate = null
+            },
+            onSave = { pet ->
+                viewModel.addPet(pet)
+                showAddDialog = false
+                pendingVaccination = null
+                pendingDate = null
+            }
+        )
     }
 
     LaunchedEffect(true) {
@@ -122,7 +133,6 @@ fun PetProfileScreen(
     ) { innerPadding ->
         ProfileHeader(
             "Pet Profile",
-//            onBackClick = onBackClick
         )
         if (pets.isEmpty()) {
             Box(
@@ -198,51 +208,74 @@ fun PetProfileScreen(
             }
         )
     }
+//    if (petToEdit != null) {
+//        PetDialog(
+//            title = "Edit Pet",
+//            initialPet = petToEdit,
+//            onDismiss = { petToEdit = null },
+//            onSave = { updatedPet ->
+//                viewModel.updatePet(petToEdit?.localId, updatedPet)
+//                petToEdit = null
+////                updated ->
+////                viewModel.updatePet(
+////                    id = petToEdit?.localId,
+////                    pet = updated
+////                )
+////                petToEdit = null
+//            }
+//        )
+//    }
     if (petToEdit != null) {
         PetDialog(
             title = "Edit Pet",
             initialPet = petToEdit,
             onDismiss = { petToEdit = null },
-            onSave = {
-                    updatedPet ->
+            onSave = { updatedPet ->
                 viewModel.updatePet(petToEdit?.localId, updatedPet)
                 petToEdit = null
-//                updated ->
-//                viewModel.updatePet(
-//                    id = petToEdit?.localId,
-//                    pet = updated
-//                )
-//                petToEdit = null
             }
         )
     }
-    if (scannedResult != null) {
-        PetDialog(
-            title = "Add Pet (from QR)",
-            initialVaccination = scannedResult!!.first,
-            initialDate = scannedResult!!.second,
-            onDismiss = { scannedResult = null },
-            onSave = { newPet ->
-                viewModel.addPet(newPet)
-                scannedResult = null
-            }
-        )
-    }
-//    LaunchedEffect(onAddPet) {
-//        if (onAddPet != {}) {
-//            showAddDialog = true
-//        }
-//    }
 }
 
-@Preview(showBackground = true)
+
+@Preview(showBackground = true, name = "PetCare – Pet Profile")
 @Composable
-fun PreviewPetProfile() {
-    MaterialTheme {
-        PetProfileScreen(
-//            viewModel = FakePetViewModel(),
-            onAddPet = {},
-            onBackClick = {}
-        )
+fun PetCarePetProfileExactPreview() {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = {}) {
+                Icon(Icons.Default.Add, contentDescription = "Add Pet")
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(12.dp)
+        ) {
+            // Profile Header
+            Text(
+                text = "Pet Profile",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            // Empty State
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No pets added yet 🐾")
+            }
+
+            // FAB is already shown
+        }
     }
 }

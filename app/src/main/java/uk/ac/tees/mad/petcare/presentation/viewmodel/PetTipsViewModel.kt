@@ -28,7 +28,7 @@ open class PetTipsViewModel @Inject constructor(): ViewModel() {
     val selectedType: StateFlow<PetType> = _selectedType
 
 //    private val apiKey = "your-api-key"
-    private val apiKey = "live_bddE6mgA93mlUqrDrxCb8VFeDHr2ZioXYNIOMarviVc56ry5cYu7On2Z1Ubd6u1y"
+    private val apiKey = " live_n6S927N7uFWt2PhiQx3HGQVersr7vLAn9obr1YCDNyeDC2rXqBIpegcKINNS1Z57 "
 
     fun changeType(type: PetType) {
         _selectedType.value = type
@@ -41,8 +41,8 @@ open class PetTipsViewModel @Inject constructor(): ViewModel() {
             _error.value = false
             try {
                 _facts.value = when (_selectedType.value) {
-                    PetType.DOG -> RetrofitInstance.api.getDogFacts(apiKey, limit = 5)
-                    PetType.CAT -> RetrofitInstance.catApi.getCatFacts(limit = 5)
+                    PetType.DOG -> listOf( RetrofitInstance.api.getDogFacts())
+                    PetType.CAT -> listOf( RetrofitInstance.catApi.getCatFacts())
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

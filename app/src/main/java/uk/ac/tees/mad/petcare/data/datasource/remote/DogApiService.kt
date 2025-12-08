@@ -7,9 +7,7 @@ import uk.ac.tees.mad.petcare.data.model.DogFact
 
 interface DogApiService {
 
-    @GET("facts")
+    @GET("facts/dog")
     suspend fun getDogFacts(
-        @Header("x-api-key") apiKey: String,
-        @Query("limit") limit: Int = 10
-    ): List<DogFact>
+    ): DogFact
 }

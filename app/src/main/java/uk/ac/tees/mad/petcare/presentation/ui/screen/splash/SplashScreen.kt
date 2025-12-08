@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.room.util.TableInfo.Column
@@ -49,6 +50,33 @@ fun SplashScreen(
     ) {
         Text("PetCare", style = MaterialTheme.typography.headlineLarge, color = Color.Black, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(16.dp))
+        Image(
+            painter = painterResource(R.drawable.paw),
+            contentDescription = "pet_care",
+            modifier = Modifier.size(60.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "PetCare – Splash Screen")
+@Composable
+fun PetCareSplashExactPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "PetCare",
+            style = MaterialTheme.typography.headlineLarge,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(Modifier.height(16.dp))
+
         Image(
             painter = painterResource(R.drawable.paw),
             contentDescription = "pet_care",

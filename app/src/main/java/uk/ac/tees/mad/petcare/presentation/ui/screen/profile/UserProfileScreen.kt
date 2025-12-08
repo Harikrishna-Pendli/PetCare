@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
@@ -35,8 +36,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader
@@ -172,14 +175,81 @@ fun UserProfileScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "PetCare – User Profile Screen")
 @Composable
-fun PreviewUserProfile() {
-    MaterialTheme {
-        UserProfileScreen(
-//            viewModel = FakeUserProfileVM(),
-            onLogout = {},
-            onBack = {}
+fun PetCareUserProfileExactPreview() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Profile Header
+        Text(
+            text = "User Profile",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+
+        Spacer(Modifier.height(16.dp))
+
+        // Email Field (Disabled)
+        OutlinedTextField(
+            value = "user@example.com",
+            onValueChange = {},
+            enabled = false,
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        // Name Field (Editable)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text("Name", style = MaterialTheme.typography.labelLarge)
+                Text(
+                    text = "John Doe",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+            IconButton(onClick = {}) {
+                Icon(Icons.Default.Edit, contentDescription = "Edit Name")
+            }
+        }
+
+        Divider()
+
+        Spacer(Modifier.height(16.dp))
+
+        // Notifications Toggle
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Enable Notifications")
+            Switch(
+                checked = true,
+                onCheckedChange = {}
+            )
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        // Logout Button
+        Button(
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)
+        ) {
+            Text("Logout")
+        }
     }
 }

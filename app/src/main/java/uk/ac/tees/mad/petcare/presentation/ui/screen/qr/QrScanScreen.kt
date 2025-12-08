@@ -1,8 +1,17 @@
 package uk.ac.tees.mad.petcare.presentation.ui.screen.qr
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +26,7 @@ import uk.ac.tees.mad.petcare.utils.QrParser
 @Composable
 fun QRScanScreen(
     onBack: () -> Unit = {},
-    onScanCompleted: (String, String) -> Unit // vaccine, date
+    onEditVaccination: (String, String) -> Unit // vaccine, date
 ) {
     var scannedText by remember { mutableStateOf("") }
     var permissionGranted by remember { mutableStateOf(false) }
@@ -32,49 +41,66 @@ fun QRScanScreen(
     if (!permissionGranted) {
         return
     }
-    Column(
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Box(
             modifier = Modifier
-                .fillMaxSize()
+                .size(300.dp)
+                .align(Alignment.Center)
         ) {
             CameraPreview(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxSize(),
                 onScanResult = { result ->
-                    scannedText = result
                     val parsed = QrParser.parseVaccinationData(result)
-
                     if (parsed != null) {
-                        val (vaccine, date) = parsed
-                        onScanCompleted(vaccine, date)
-                    }                }
+                        onEditVaccination(parsed.first, parsed.second)
+                    } else {
+                        scannedText = result
+                    }
+                }
             )
+        }
         ScannerOverlay()
-
+        ScanStatus(scannedText)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(onClick = onBack) {
+            Button(onClick = onBack,
+                modifier = Modifier
+//                    .align(Alignment.BottomStart)
+                    .padding(16.dp)) {
                 Text("Back")
             }
         }
-        Surface(
-                tonalElevation = 3.dp,
-                modifier = Modifier.fillMaxWidth()
-//                    .align(Alignment.Center)
+    }
+}
+
+@Composable
+fun ScanStatus(result: String) {
+    Surface(
+        tonalElevation = 3.dp,
+        modifier = Modifier
+//            .align(Alignment.Bottom)
+            .padding(bottom = 100.dp)
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+//                .background(Color.White.copy(alpha = 0.7f))
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .background(Color.White.copy(alpha = 0.7f))
-            ) {
-                Text(
-                    text = if (scannedText.isEmpty()) "Scan a QR Code…" else "Scanned: $scannedText",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            }
+            Text(
+                text = if (result.isEmpty()) "Scanning…" else "Scanned: $result",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
+}
 

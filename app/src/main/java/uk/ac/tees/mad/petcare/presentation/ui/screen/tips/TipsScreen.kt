@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.ac.tees.mad.petcare.presentation.ui.components.ProfileHeader
 import uk.ac.tees.mad.petcare.presentation.viewmodel.PetTipsViewModel
@@ -133,14 +134,53 @@ fun TipsScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "PetCare – Tips Screen")
 @Composable
-fun PreviewTipsScreen() {
-    MaterialTheme {
-        TipsScreen(
-//            viewModel = FakeTipsViewModel(),
-            onBack = {}
-        )
+fun PetCareTipsExactPreview() {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Profile Header
+            Text(
+                text = "Tips",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            // Filter Chips
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                FilterChip(
+                    selected = true,
+                    onClick = {},
+                    label = { Text("Dog") }
+                )
+                FilterChip(
+                    selected = false,
+                    onClick = {},
+                    label = { Text("Cat") }
+                )
+            }
+
+            // Content
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("No tips available!")
+            }
+        }
     }
 }
-

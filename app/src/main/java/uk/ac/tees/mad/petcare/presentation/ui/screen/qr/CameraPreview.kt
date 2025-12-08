@@ -1,22 +1,23 @@
 package uk.ac.tees.mad.petcare.presentation.ui.screen.qr
 
+import QRAnalyzer
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 
 @Composable
 fun CameraPreview(
     modifier: Modifier = Modifier,
-    onScanResult: (String) -> Unit
+    onScanResult: (String) -> Unit,
+    onScanning: (Boolean) -> Unit = {}
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -29,6 +30,7 @@ fun CameraPreview(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
+                scaleType = androidx.camera.view.PreviewView.ScaleType.FILL_CENTER
             }
 
             val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
@@ -48,11 +50,11 @@ fun CameraPreview(
 
                 analysis.setAnalyzer(
                     ContextCompat.getMainExecutor(ctx),
-                    QRAnalyzer { result ->
-                        onScanResult(result)
-                    }
+                    QRAnalyzer(
+                        onResult = onScanResult,
+                        onScanning = onScanning
+                    )
                 )
-
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     lifecycleOwner,

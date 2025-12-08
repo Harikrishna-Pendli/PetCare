@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import android.net.Uri
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -61,26 +62,39 @@ fun NavGraph(
             )
         }
 
-        composable(Routes.PET_PROFILE) {
+        composable(
+            route = "${Routes.PET_PROFILE}?vaccine={vaccine}&date={date}",
+            arguments = listOf(
+                navArgument("vaccine") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                },
+                navArgument("date") {
+                    type = NavType.StringType; nullable = true; defaultValue = null
+                }
+            )
+        ) { backStackEntry ->
+            val vaccine = backStackEntry.arguments?.getString("vaccine")
+            val date = backStackEntry.arguments?.getString("date")
             PetProfileScreen(
-                onAddPet = { TODO() },
+                scannedVaccination = vaccine,
+                scannedDate = date,
                 onBackClick = { navController.navigateUp() }
             )
         }
+
         composable(Routes.TIPS) {
             TipsScreen()
         }
 
-        composable(Routes.QR_SCAN) {
+        composable(Routes.QR_SCAN) { navBack ->
             QRScanScreen(
-                onScanCompleted = { vaccine, date ->
-                    navController.navigate(
-                        "pet_profile?vaccine=${vaccine}&date=${date}"
-                    )
-                },
-                onBack = { navController.navigateUp() }
+                onBack = { navController.popBackStack() },
+                onEditVaccination = { vaccine, date ->
+                    // encode to be safe
+                    val route = "${Routes.PET_PROFILE}?vaccine=${Uri.encode(vaccine)}&date=${Uri.encode(date)}"
+                    navController.navigate(route)
+                }
             )
-
         }
 
         composable(Routes.USER_PROFILE) {

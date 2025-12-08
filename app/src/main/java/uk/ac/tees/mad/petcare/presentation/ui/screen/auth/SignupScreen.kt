@@ -120,13 +120,63 @@ fun SignupScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "PetCare – Sign Up Screen")
 @Composable
-fun PreviewSignupScreen() {
-    MaterialTheme {
-        SignupScreen(
-//            viewModel = FakeAuthViewModel(),
-            onSignupSuccess = {}
-        )
+fun PetCareSignupExactPreview() {
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text("Sign up to continue", style = MaterialTheme.typography.headlineSmall)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    label = { Text("name") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    label = { Text("Email") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                TextField(
+                    value = "",
+                    onValueChange = {},
+                    label = { Text("Password") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {},
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Sign Up")
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // No error message in preview
+            }
+        }
     }
 }

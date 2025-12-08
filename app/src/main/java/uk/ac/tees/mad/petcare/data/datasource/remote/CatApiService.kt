@@ -6,8 +6,7 @@ import uk.ac.tees.mad.petcare.data.model.DogFact
 
 interface CatApiService {
 
-    @GET("facts")
+    @GET("fact")
     suspend fun getCatFacts(
-        @Query("limit") limit: Int = 5
-    ): List<DogFact> // same model reused
+    ): DogFact
 }
